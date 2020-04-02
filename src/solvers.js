@@ -14,6 +14,11 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
+
+  // if (n === 1 ) {
+  //   return [[1]];
+  // }
+
   var solution = undefined; //fixme
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
@@ -43,11 +48,12 @@ window.countNRooksSolutions = function(n) {
   // filter out failing solutions if any got through our process
   // currentSolutions.filter(x => !x.hasAnyConflicts());
 
-  solutions.filter(x => {
-    var re = /*1*1*1/g; */
-    x.search(re);
+  // solutions.filter(x => {
+  //   var re = /*1*1*1/g; */
+  //   x.search(re);
 
-  });
+  // });
+  console.log(solutions);
 
   var filterStrs = function (arr) {
     result = [];
@@ -69,14 +75,58 @@ window.countNRooksSolutions = function(n) {
     return result;
   };
 
-  var convertToMatrix = function (string) {
+
+  filteredSolutions = filterStrs(solutions);
+
+  // console.log(filteredSolutions);
+
+  var convertToMatrix = function (arr) {
+
+    var results = [];
+
+    var conv = function(str) {
+
+      var convertedArr = Array(n).fill().map(()=>Array(n).fill());
+
+      for (var i = 0; i < n; i++) {
+        for (var j = 0; j < n; j++) {
+          convertedArr[i][j] = Number(str[0]);
+          str = str.slice(1);
+        }
+      }
+
+      return convertedArr;
+    };
+
+    for (var str of arr) {
+      results.push(conv(str));
+    }
+
+    return results;
   };
 
-  var filterFails = function () {
+  matrixedSolutions = convertToMatrix(filteredSolutions);
+
+  console.log(matrixedSolutions);
+
+  var filterFails = function (arr) {
+    var results = [];
+
+    for (var matrix of arr) {
+      var board = new Board(matrix);
+      if (!board.hasAnyRooksConflicts()) {
+        results.push(matrix);
+      }
+    }
+    return results;
+
   };
 
+  successfulsolutions = filterFails(matrixedSolutions);
 
-  var solutionCount = solutions.length; //fixme
+  console.log((successfulsolutions));
+
+  var solutionCount = successfulsolutions.length; //fixme
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
