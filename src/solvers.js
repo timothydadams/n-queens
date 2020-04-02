@@ -13,8 +13,6 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
-
-
 window.findNRooksSolution = function(n) {
   var solution = undefined; //fixme
 
@@ -24,8 +22,61 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
 
+  var solutions = [];
+
+  // var newMatrix = [Array(n).map((x) => (new Array(this.length+2)))];
+
+  var countRooksHelper = function (currentSolutionStr) {
+
+    if (currentSolutionStr.length === n * n) {
+      //some kind of filter to only add solns with 3 '1's
+      solutions.push(currentSolutionStr);
+      return;
+    }
+
+    ['0', '1'].forEach(x => {
+      countRooksHelper(currentSolutionStr + x);
+    });
+
+  };
+
+  countRooksHelper('');
+  // filter out failing solutions if any got through our process
+  // currentSolutions.filter(x => !x.hasAnyConflicts());
+
+  solutions.filter(x => {
+    var re = /*1*1*1/g; */
+    x.search(re);
+
+  });
+
+  var filterStr = function (arr) {
+    result = [];
+    for (var string of arr) {
+      onecount = {};
+      for (var char of string) {
+        if (char === '1') {
+          onecount[string] = 1;
+        } else {
+          onecount[string] += 1;
+        }
+      }
+      if (onecount[string] === n) {
+        result = [];
+      }
+    }
+  };
+
+  var convertToMatrix = function (string) {
+
+  };
+
+  var filterFails = function () {
+  };
+
+
+  var solutionCount = solutions.length; //fixme
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
