@@ -117,37 +117,47 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-
       var startIndex = majorDiagonalColumnIndexAtFirstRow;
-      var n = this.rows().length - 1;
+      var n = this.rows().length;
 
       var count = 0;
-      for (var i = startIndex; i < n; i++) {
+
+      for (var i = 0; i < n; i++) {
         var element = this.rows()[i][startIndex + i];
         if (element === 1) {
           count++;
         }
       }
+
       return count > 1; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      var results = [];
-      var n = ((this.rows().length - 1) * 2);
-      // //run from 0...3
 
-      for (var i = 0; i <= n; i++) {
+      var results = [];
+      var n = ((this.rows().length - 1));
+      for (var i = -n; i <= n; i++) {
         results.push(this.hasMajorDiagonalConflictAt(i));
       }
-
       return results.reduce((x, y) => (x || y));
+
+      // var results = [];
+      // var n = ((this.rows().length - 1) * 2);
+      // // //run from 0...3
+
+      // for (var i = 0; i <= n; i++) {
+      //   results.push(this.hasMajorDiagonalConflictAt(i));
+      // }
+
+      // return results.reduce((x, y) => (x || y));
     },
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+
       var startIndex = minorDiagonalColumnIndexAtFirstRow;
       var n = this.rows().length;
       var count = 0;
@@ -168,9 +178,13 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-    //
-    //
-      return false; // fixme
+
+      var results = [];
+      var n = ((this.rows().length - 1));
+      for (var i = 0; i <= 2 * n; i++) {
+        results.push(this.hasMinorDiagonalConflictAt(i));
+      }
+      return results.reduce((x, y) => (x || y));
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
