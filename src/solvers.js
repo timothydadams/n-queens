@@ -51,7 +51,7 @@ window.countNRooksSolutions = function(n) {
 
   });
 
-  var filterStr = function (arr) {
+  var filterStrs = function (arr) {
     result = [];
     for (var string of arr) {
       onecount = {};
@@ -63,9 +63,10 @@ window.countNRooksSolutions = function(n) {
         }
       }
       if (onecount[string] === n) {
-        result = [];
+        result.push(string);
       }
     }
+    return result;
   };
 
   var convertToMatrix = function (string) {
