@@ -28,13 +28,11 @@ window.countNRooksSolutions = function(n) {
   // var newMatrix = [Array(n).map((x) => (new Array(this.length+2)))];
 
   var countRooksHelper = function (currentSolutionStr) {
-
     if (currentSolutionStr.length === n * n) {
       //some kind of filter to only add solns with 3 '1's
       solutions.push(currentSolutionStr);
       return;
     }
-
     ['0', '1'].forEach(x => {
       countRooksHelper(currentSolutionStr + x);
     });
@@ -57,9 +55,11 @@ window.countNRooksSolutions = function(n) {
       onecount = {};
       for (var char of string) {
         if (char === '1') {
-          onecount[string] = 1;
-        } else {
-          onecount[string] += 1;
+          if (onecount[string] === undefined) {
+            onecount[string] = 1;
+          } else {
+            onecount[string] += 1;
+          }
         }
       }
       if (onecount[string] === n) {
@@ -70,7 +70,6 @@ window.countNRooksSolutions = function(n) {
   };
 
   var convertToMatrix = function (string) {
-
   };
 
   var filterFails = function () {
