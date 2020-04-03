@@ -12,137 +12,159 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
+window.rooksObj = {};
+window.queensObj = {};
 
 window.findNRooksSolution = function(n) {
 
-  // if (n === 1 ) {
-  //   return [[1]];
-  // }
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
 
-  var solution = undefined; //fixme
+  countNRooksSolutions(n);
+
+  var rnd = getRandomInt(window.rooksObj[n].length - 1);
+
+  // Array(n).fill().map(()=>Array(n).fill());
+  // console.log(window.rooksolutions);
+
+  var solution = JSON.parse(window.rooksObj[n][rnd]);
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
+
+
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
 
-  var solutions = [];
+  // window.rooksolutions = [];
 
-  // var newMatrix = [Array(n).map((x) => (new Array(this.length+2)))];
+  var solutions = []; //store each soln board
+  //var solutionCount = 0;
+  var testBoard = new Board({n:n});
 
-  var countRooksHelper = function (currentSolutionStr) {
-    if (currentSolutionStr.length === n * n) {
-      //some kind of filter to only add solns with 3 '1's
-      solutions.push(currentSolutionStr);
+  var findSoln = function(row) {
+    //if we've added a rook to all the rows
+    if (row === n) {
+      // solutionsCount++;
+      //push stringified version to solutions array'
+      solutions.push(JSON.stringify(testBoard.rows()));
       return;
     }
-    ['0', '1'].forEach(x => {
-      countRooksHelper(currentSolutionStr + x);
-    });
-
-  };
-
-  countRooksHelper('');
-  // filter out failing solutions if any got through our process
-  // currentSolutions.filter(x => !x.hasAnyConflicts());
-
-  // solutions.filter(x => {
-  //   var re = /*1*1*1/g; */
-  //   x.search(re);
-
-  // });
-  console.log(solutions);
-
-  var filterStrs = function (arr) {
-    result = [];
-    for (var string of arr) {
-      onecount = {};
-      for (var char of string) {
-        if (char === '1') {
-          if (onecount[string] === undefined) {
-            onecount[string] = 1;
-          } else {
-            onecount[string] += 1;
-          }
-        }
+    //iterate over decisions
+    for (var i = 0; i < n; i++) {
+      //toggle a piece on the board
+      testBoard.togglePiece(row, i);
+      //check for no conflicts
+      if (!testBoard.hasAnyRooksConflicts()) {  //continue to solve
+        findSoln(row + 1);
       }
-      if (onecount[string] === n) {
-        result.push(string);
-      }
+
+      testBoard.togglePiece(row, i);
     }
-    return result;
   };
 
+  findSoln(0);
 
-  filteredSolutions = filterStrs(solutions);
-
-  // console.log(filteredSolutions);
-
-  var convertToMatrix = function (arr) {
-
-    var results = [];
-
-    var conv = function(str) {
-
-      var convertedArr = Array(n).fill().map(()=>Array(n).fill());
-
-      for (var i = 0; i < n; i++) {
-        for (var j = 0; j < n; j++) {
-          convertedArr[i][j] = Number(str[0]);
-          str = str.slice(1);
-        }
-      }
-
-      return convertedArr;
-    };
-
-    for (var str of arr) {
-      results.push(conv(str));
-    }
-
-    return results;
-  };
-
-  matrixedSolutions = convertToMatrix(filteredSolutions);
-
-  console.log(matrixedSolutions);
-
-  var filterFails = function (arr) {
-    var results = [];
-
-    for (var matrix of arr) {
-      var board = new Board(matrix);
-      if (!board.hasAnyRooksConflicts()) {
-        results.push(matrix);
-      }
-    }
-    return results;
-
-  };
-
-  successfulsolutions = filterFails(matrixedSolutions);
-
-  console.log((successfulsolutions));
-
-  var solutionCount = successfulsolutions.length; //fixme
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  //function factorial(x) { if (x === 0) { return 1;} return x * factorial(x-1);}
+  window.rooksObj[n] = solutions;
+  // solutionCount = solutions.length;
+  // solutionCount = factorial(n); //fixme
+  console.log('Number of solutions for ' + n + ' rooks:', solutions.length); //return length of soln array
+  return solutions.length;
 };
+
+window.countNRooksSolutions = _.memoize(countNRooksSolutions);
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
 
+
+  var board = new Board({n:n});
+
+  // if (n === 0) {
+  //   solution = [[]];
+  //   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  //   return [[]];
+  // }
+
+  // if (n === 1) {
+  //   solution = [[1]];
+  //   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  //   return [[1]];
+  // // }
+
+  // if (n === 2 || n === 3) {
+  //   // solution = board.rows();
+  //   // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  //   return;
+  // }
+
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  var countsolutions = countNQueensSolutions(n);
+
+  var rnd = getRandomInt(window.queensObj[n].length - 1);
+// Array(n).fill().map(()=>Array(n).fill());
+// console.log(window.rooksolutions);
+  var solution = JSON.parse(window.queensObj[n][rnd]);
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
+
+
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+
+
+  var solutions = []; //store each soln board
+  //var solutionCount = 0;
+  var testBoard = new Board({n:n});
+
+  var findSoln = function(row) {
+    //if we've added a rook to all the rows
+    if (row === n) {
+      // solutionsCount++;
+      //push stringified version to solutions array'
+
+      solutions.push(JSON.stringify(testBoard.rows()));
+      return;
+    }
+    //iterate over decisions
+    for (var i = 0; i < n; i++) {
+      //toggle a piece on the board
+      testBoard.togglePiece(row, i);
+      //check for no conflicts
+      if (!testBoard.hasAnyQueensConflicts()) {  //continue to solve
+        findSoln(row + 1);
+      }
+      testBoard.togglePiece(row, i);
+    }
+  };
+
+  findSoln(0);
+
+  //function factorial(x) { if (x === 0) { return 1;} return x * factorial(x-1);}
+  window.queensObj[n] = solutions;
+
+  /// new stuff
+  if (n === 2 || n === 3) {
+    // solution = board.rows();
+    // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+    window.queensObj[n] = [JSON.stringify(new Board({n:n}).rows())];
+    // return;
+  }
+  // solutionCount = solutions.length;
+  // solutionCount = factorial(n); //fixme
+
+  console.log('Number of solutions for ' + n + ' queens:', solutions.length);
+  return solutions.length;
 };
+
+window.countNQueensSolutions = _.memoize(countNQueensSolutions);

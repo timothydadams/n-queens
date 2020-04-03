@@ -84,6 +84,12 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
+
+      if (this.rows().length === 1 || this.rows().length === 0) {
+        return false;
+      }
+
+
       return this.rows() // [[], [], []]
         .map(x => this.hasRowConflictAt(this.rows().indexOf(x)))
         .reduce((y, z) => z || y);
@@ -135,6 +141,10 @@
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
 
+      if (this.rows().length === 1 || this.rows().length === 0) {
+        return false;
+      }
+
       var results = [];
       var n = ((this.rows().length - 1));
       for (var i = -n; i <= n; i++) {
@@ -178,6 +188,10 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+
+      if (this.rows().length === 1 || this.rows().length === 0) {
+        return false;
+      }
 
       var results = [];
       var n = ((this.rows().length - 1));
